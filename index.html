@@ -173,6 +173,18 @@ a { color: inherit; }
   font: 400 20px/1 var(--display); background: var(--ink); color: var(--paper);
 }
 .copy-steps p { padding-top: 6px; }
+.copy-steps code { font: 700 15px/1 ui-monospace, Consolas, "Courier New", monospace; background: var(--paper-2); border: 1px solid var(--ink-2); border-radius: 5px; padding: 2px 6px; }
+.os { display: inline-block; font: 900 11px/1 var(--body); letter-spacing: .1em; text-transform: uppercase; background: var(--ink); color: var(--paper); border-radius: 4px; padding: 4px 6px 3px; margin: 6px 6px 0 0; }
+.downloads { display: flex; flex-wrap: wrap; gap: 14px; }
+.dl {
+  display: grid; gap: 2px; min-width: 0; flex: 1 1 240px;
+  padding: 14px 18px 12px; text-decoration: none; color: var(--ink);
+  background: var(--yellow); border: 3px solid var(--ink); border-bottom-width: 7px; border-radius: 14px;
+}
+.dl b { font: 400 23px/1.1 var(--display); }
+.dl small { font-size: 14px; font-weight: 800; color: var(--ink); opacity: .75; }
+.dl:hover { background: #ffc93f; }
+.dl:active { border-bottom-width: 4px; transform: translateY(3px); }
 .code {
   font: 400 26px/1 var(--display); letter-spacing: .12em;
   padding: 6px 12px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper-2);
@@ -214,7 +226,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     <p class="tagline sheet">Les palettes s'empilent, les camions attendent, les équipes s'épuisent. Vous dirigez une usine de vélos : trouvez ce qui la limite vraiment, et réglez-le sans tout casser.</p>
     <figure class="screen sheet" style="margin:0">
       <video id="video" controls playsinline preload="none" poster="media/affiche.jpg" src="media/presentation-1080p.mp4"></video>
-      <figcaption class="screen-foot"><span>Vidéo de présentation · 1 min 52 · 1080p · images du jeu</span><span>Version de test pour Windows et Mac</span></figcaption>
+      <figcaption class="screen-foot"><span>Vidéo de présentation · 1 min 52 · 1080p · images du jeu</span><a href="#copie-titre">Télécharger la version de test ↓</a></figcaption>
     </figure>
   </header>
 
@@ -291,14 +303,22 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
   <section aria-labelledby="copie-titre" class="copy sheet">
     <div class="section-head" style="margin-bottom:0">
       <span class="tag" style="justify-self:start">Version de test</span>
-      <h2 id="copie-titre">Recevoir une copie</h2>
+      <h2 id="copie-titre">Télécharger et jouer</h2>
       <p>Le jeu est en test : chaque copie est personnelle et ne s'ouvre que sur l'ordinateur pour lequel sa clé a été faite.</p>
     </div>
+    <div class="downloads">
+      <a class="dl" id="dl-win" href="https://github.com/zarkyxxx/factory-director/releases/latest/download/FactoryDirector-Windows.zip"><b>Télécharger pour Windows</b><small>Windows 10 ou 11 · zip</small></a>
+      <a class="dl" id="dl-mac" href="https://github.com/zarkyxxx/factory-director/releases/latest/download/FactoryDirector-Mac.zip"><b>Télécharger pour Mac</b><small>macOS 12 ou plus récent · zip</small></a>
+    </div>
+    <p class="fine" id="dl-version">Toujours la dernière version de test.</p>
     <ol class="copy-steps">
-      <li><p>Demandez le jeu à la personne qui vous a parlé de cette page : vous recevez un dossier pour Windows ou pour Mac.</p></li>
-      <li><p>Lancez-le. L'écran « Copie de test personnelle » affiche le code de votre ordinateur, par exemple<br><span class="code">ABCDE-FGH23</span></p></li>
-      <li><p>Cliquez sur « Copier le code » et envoyez-le-lui. Vous recevez en retour votre clé, une longue ligne qui commence par FD1.</p></li>
+      <li><p>Décompressez le zip, puis lancez <b>FactoryDirector</b>.<br>
+        <span class="os">Windows</span> si « Windows a protégé votre ordinateur » s'affiche : « Informations complémentaires », puis « Exécuter quand même ».<br>
+        <span class="os">Mac</span> le jeu n'est pas signé par Apple : ouvrez le Terminal, tapez <code>xattr -cr</code> suivi d'un espace, glissez FactoryDirector dans la fenêtre et appuyez sur Entrée.</p></li>
+      <li><p>L'écran « Copie de test personnelle » affiche le code de votre ordinateur, par exemple<br><span class="code">ABCDE-FGH23</span></p></li>
+      <li><p>Cliquez sur « Copier le code » et envoyez-le à la personne qui vous a parlé du jeu. Vous recevez en retour votre clé, une longue ligne qui commence par FD1.</p></li>
       <li><p>Collez la clé dans le jeu, cliquez sur « Activer ». Le jeu s'ouvre, et la clé reste enregistrée.</p></li>
+      <li><p>Ensuite, le jeu se met à jour tout seul : quand une nouvelle version sort, le menu propose « Mettre à jour ». Pas besoin de retélécharger ni de réinstaller ; votre clé et vos parties sont gardées.</p></li>
     </ol>
     <p class="fine">Une clé ne sert que sur son ordinateur : copier le dossier du jeu chez quelqu'un d'autre, ou lui passer votre clé, ne lui ouvre pas le jeu. Si vous changez d'ordinateur, demandez une nouvelle clé.</p>
   </section>
@@ -309,5 +329,18 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     <span>Polices : Lilita One et Nunito (OFL)</span>
   </footer>
 </main>
+<script>
+fetch('version.txt', { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (t) {
+  var p = t.trim().slice(5).split('.')[0].replace(/-/g, '+').replace(/_/g, '/');
+  p += '='.repeat((4 - p.length % 4) % 4);
+  var bytes = Uint8Array.from(atob(p), function (c) { return c.charCodeAt(0); });
+  var f = new TextDecoder().decode(bytes).split('|');
+  if (f[0] !== 'v1') return;
+  var mo = function (n) { return Math.round(n / 1048576) + ' Mo'; };
+  document.getElementById('dl-version').textContent = 'Dernière version : ' + f[2] + ', du ' + f[3].split('-').reverse().join('/') + '.';
+  if (+f[6]) document.querySelector('#dl-win small').textContent = 'Windows 10 ou 11 · zip · ' + mo(+f[6]);
+  if (+f[9]) document.querySelector('#dl-mac small').textContent = 'macOS 12 ou plus récent · zip · ' + mo(+f[9]);
+}).catch(function () {});
+</script>
 </body>
 </html>
