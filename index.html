@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Factory Director : Beyond the Bottleneck</title>
+<link rel="icon" type="image/png" href="media/icone.png">
+<meta property="og:title" content="Factory Director : Beyond the Bottleneck">
+<meta property="og:description" content="Vous dirigez une usine de vélos : trouvez ce qui la limite vraiment. Un jeu de gestion en test.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://zarkyxxx.github.io/factory-director/media/affiche.jpg">
+<meta name="description" content="Factory Director : Beyond the Bottleneck — un jeu de gestion où vous dirigez une usine de vélos et cherchez ce qui la limite vraiment.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Nunito:wght@500;700;800;900&display=swap">
+<style>
+html { padding: env(safe-area-inset-top, 0px) 0 env(safe-area-inset-bottom, 0px); }
+/* Mise en page : un tableau d'atelier. Des fiches de papier épinglées, bord d'encre épais en bas,
+   le titre du jeu tel qu'au menu, la vidéo comme écran principal, puis le flux d'une vraie partie. */
+:root {
+  --paper: #fff9ee;
+  --paper-2: #f4ecdd;
+  --kraft: #e6cea0;
+  --ink: #26231f;
+  --ink-2: #625a50;
+  --yellow: #f6b91f;
+  --orange: #f07b2c;
+  --teal: #23909f;
+  --green: #3fa45b;
+  --red: #e04b3c;
+  --board: #d9cdb6;
+  --display: "Lilita One", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --body: "Nunito", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--board);
+  background-image: radial-gradient(rgba(38, 35, 31, .06) 1px, transparent 1px);
+  background-size: 6px 6px;
+  color: var(--ink);
+  font: 500 17px/1.6 var(--body);
+}
+.wrap {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding-block: 28px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 56px;
+  overflow-x: clip;
+}
+h1, h2, h3 { font-family: var(--display); font-weight: 400; line-height: 1.05; margin: 0; text-wrap: balance; }
+h2 { font-size: clamp(30px, 4.4vw, 44px); }
+h3 { font-size: 23px; }
+p { margin: 0; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--orange); outline-offset: 3px; }
+
+/* une fiche : papier, bord d'encre, plus épais en bas */
+.sheet {
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-bottom-width: 7px;
+  border-radius: 16px;
+}
+.tag {
+  display: inline-block;
+  font: 900 13px/1 var(--body);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 6px 10px 5px;
+  border: 2px solid var(--ink);
+  border-radius: 6px;
+  background: var(--yellow);
+  color: var(--ink);
+}
+.tag--ink { background: var(--ink); color: var(--paper); }
+
+/* ---- le titre, comme au menu du jeu */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; }
+.brand { display: flex; align-items: center; gap: 18px; transform: rotate(-2.5deg); transform-origin: left center; width: fit-content; max-width: 100%; }
+.brand img { width: clamp(84px, 13vw, 132px); height: auto; flex: none; }
+.brand-words { display: grid; gap: 4px; min-width: 0; }
+.brand-words .tag { justify-self: start; transform: rotate(2deg); }
+.logo {
+  font-family: var(--display);
+  font-size: clamp(56px, 10vw, 112px);
+  line-height: .88;
+  color: var(--paper);
+  -webkit-text-stroke: 8px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 0 7px 0 var(--ink);
+  margin: 0;
+}
+.logo span { display: block; color: var(--yellow); margin-left: .12em; }
+.brand-words .tag--ink { font-size: clamp(13px, 1.8vw, 18px); transform: rotate(1.5deg); margin-top: 10px; }
+.tagline {
+  max-width: 640px;
+  padding: 16px 20px;
+  font-weight: 700;
+  font-size: clamp(17px, 2vw, 20px);
+  transform: rotate(.6deg);
+}
+
+/* ---- la vidéo : l'écran de l'atelier */
+.screen { padding: 10px; display: grid; gap: 10px; }
+.screen video { display: block; width: 100%; max-width: 100%; aspect-ratio: 16 / 9; border-radius: 9px; background: var(--ink); }
+.screen-foot { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; padding: 0 6px 4px; font-size: 14px; color: var(--ink-2); font-weight: 700; }
+
+/* ---- le flux d'une vraie partie */
+.flow-head { display: grid; gap: 10px; max-width: 70ch; }
+.flow-scroll { overflow-x: auto; padding-bottom: 6px; }
+.flow { display: flex; align-items: stretch; gap: 6px; min-width: 900px; font-variant-numeric: tabular-nums; }
+.st, .buf {
+  border: 2px solid var(--ink);
+  border-bottom-width: 4px;
+  border-radius: 10px;
+  padding: 8px 10px;
+  display: grid;
+  align-content: start;
+  gap: 2px;
+}
+.st { background: var(--paper); flex: 1.4; border-top: 6px solid var(--green); }
+.st b { font: 400 17px/1.1 var(--display); }
+.st small, .buf small { font-size: 12px; line-height: 1.25; color: var(--ink-2); font-weight: 700; }
+.buf { background: var(--kraft); flex: .8; }
+.buf b { font: 400 22px/1 var(--display); }
+.buf.high { background: #f9d7c9; }
+.arrow { align-self: center; font: 900 18px/1 var(--body); color: var(--orange); }
+.flow-note { font-size: 15px; color: var(--ink-2); max-width: 70ch; }
+
+/* ---- ce que vous faites : la semaine, dans l'ordre */
+.loop { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; counter-reset: step; }
+.loop li { list-style: none; padding: 18px 18px 20px; display: grid; align-content: start; gap: 8px; }
+.loop li::before {
+  counter-increment: step;
+  content: counter(step);
+  width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center;
+  font: 400 21px/1 var(--display);
+  background: var(--yellow); border: 2px solid var(--ink);
+}
+.loop ol, .loop { margin: 0; padding: 0; }
+.loop p { font-size: 15.5px; color: var(--ink-2); }
+
+/* ---- les six usines */
+.plants { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.plant { overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.plant img { width: 100%; max-width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-bottom: 3px solid var(--ink); }
+.plant div { padding: 14px 16px 16px; display: grid; gap: 6px; align-content: start; }
+.plant .num { font: 900 12px/1 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--teal); }
+.plant p { font-size: 15.5px; color: var(--ink-2); }
+
+/* ---- les grands moments */
+.moments { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.moment { padding: 12px 16px 14px; display: grid; gap: 4px; background: var(--paper); border: 2px solid var(--ink); border-bottom-width: 5px; border-radius: 12px; }
+.moment b { font: 400 20px/1.1 var(--display); }
+.moment span { font-size: 15px; color: var(--ink-2); }
+.moment:nth-child(odd) { transform: rotate(-.6deg); }
+.moment:nth-child(4n+2) { transform: rotate(.5deg); }
+
+/* ---- recevoir une copie de test */
+.copy { padding: clamp(20px, 4vw, 36px); display: grid; gap: 22px; background: var(--paper); }
+.copy-steps { margin: 0; padding: 0; display: grid; gap: 14px; counter-reset: c; }
+.copy-steps li { list-style: none; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 14px; align-items: start; }
+.copy-steps li::before {
+  counter-increment: c; content: counter(c);
+  width: 38px; height: 38px; border-radius: 9px; display: grid; place-items: center;
+  font: 400 20px/1 var(--display); background: var(--ink); color: var(--paper);
+}
+.copy-steps p { padding-top: 6px; }
+.code {
+  font: 400 26px/1 var(--display); letter-spacing: .12em;
+  padding: 6px 12px; border: 2px solid var(--ink); border-radius: 8px; background: var(--paper-2);
+  display: inline-block; margin-top: 6px;
+}
+.fine { font-size: 14.5px; color: var(--ink-2); max-width: 70ch; }
+
+footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--ink-2); font-weight: 700; }
+
+.section-head { display: grid; gap: 10px; margin-bottom: 22px; max-width: 72ch; }
+.section-head p { color: var(--ink-2); }
+
+@media (max-width: 860px) {
+  .loop { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .plants, .moments { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  body { font-size: 16px; }
+  .loop, .plants, .moments { grid-template-columns: minmax(0, 1fr); }
+  .logo { -webkit-text-stroke-width: 6px; text-shadow: 0 5px 0 var(--ink); }
+  .brand { gap: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand, .tagline, .moment, .brand-words .tag { transform: none !important; }
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div class="brand">
+      <img src="media/icone.png" alt="" width="132" height="132">
+      <div class="brand-words">
+        <span class="tag">Management industriel</span>
+        <h1 class="logo">Factory<span>Director</span></h1>
+        <span class="tag tag--ink">Beyond the Bottleneck</span>
+      </div>
+    </div>
+    <p class="tagline sheet">Les palettes s'empilent, les camions attendent, les équipes s'épuisent. Vous dirigez une usine de vélos : trouvez ce qui la limite vraiment, et réglez-le sans tout casser.</p>
+    <figure class="screen sheet" style="margin:0">
+      <video id="video" controls playsinline preload="none" poster="media/affiche.jpg" src="media/presentation-1080p.mp4"></video>
+      <figcaption class="screen-foot"><span>Vidéo de présentation · 1 min 52 · 1080p · images du jeu</span><span>Version de test pour Windows et Mac</span></figcaption>
+    </figure>
+  </header>
+
+  <section aria-labelledby="flux-titre">
+    <div class="flow-head">
+      <span class="tag tag--ink" style="justify-self:start">Le flux</span>
+      <h2 id="flux-titre">Où est le goulot ?</h2>
+      <p>Le flux de l'usine nationale un mardi à 15 h 50, relevé dans une vraie partie : ce que chaque poste a fait depuis lundi, et ce qui attend entre eux. Le plus gros stock n'est pas forcément devant le coupable. Dans le jeu, on va voir sur place avant de conclure.</p>
+    </div>
+    <div class="flow-scroll" style="margin-top:20px">
+      <div class="flow" role="list">
+        <div class="buf" role="listitem"><small>Quai de réception</small><b>11</b></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="st" role="listitem"><b>Réception</b><small>164 faits</small></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="buf high" role="listitem"><small>Magasin matière</small><b>182</b><small>à peindre : 40</small></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="st" role="listitem"><b>Peinture</b><small>132 faits</small></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="buf" role="listitem"><small>Vers le four</small><b>17</b></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="st" role="listitem"><b>Four</b><small>135 faits</small></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="buf" role="listitem"><small>À assembler</small><b>46</b></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="st" role="listitem"><b>Assemblage</b><small>129 faits</small></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="buf" role="listitem"><small>À contrôler</small><b>11</b></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="st" role="listitem"><b>Contrôle</b><small>148 faits</small></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="buf" role="listitem"><small>Produits finis</small><b>48</b></div><span class="arrow" aria-hidden="true">›</span>
+        <div class="st" role="listitem"><b>Expédition</b><small>150 livrés</small></div>
+      </div>
+    </div>
+    <p class="flow-note" style="margin-top:12px">Ce mardi-là : 30 vélos en retard, 74 % des commandes à l'heure pour un objectif de 90 %, 1 095 vélos encore à livrer.</p>
+  </section>
+
+  <section aria-labelledby="semaine-titre">
+    <div class="section-head">
+      <h2 id="semaine-titre">Une semaine de directeur</h2>
+      <p>Chaque semaine se joue en trois temps : vous décidez, l'usine tourne sous vos yeux heure par heure, puis le bilan tombe.</p>
+    </div>
+    <ol class="loop">
+      <li class="sheet"><h3>Aller voir</h3><p>Marche sur le terrain (Gemba), entretiens, chronométrage. Une rumeur vous attend dès l'arrivée : c'est parfois une fausse piste.</p></li>
+      <li class="sheet"><h3>Désigner le goulot</h3><p>Le poste et la cause : effectifs, pannes, compétences, réglages. Le verdict vient des faits, pas de votre intuition.</p></li>
+      <li class="sheet"><h3>Décider</h3><p>Embaucher, former, déplacer quelqu'un, heures sup, maintenance, équipe du soir, lancer au rythme du goulot. Vous avez peu de créneaux : choisissez.</p></li>
+      <li class="sheet"><h3>Regarder la semaine</h3><p>Les vélos avancent poste par poste, les camions partent ou attendent. Le bilan dit ce que vos choix ont changé, en chiffres.</p></li>
+    </ol>
+  </section>
+
+  <section aria-labelledby="usines-titre">
+    <div class="section-head">
+      <h2 id="usines-titre">Six usines, six casse-têtes</h2>
+      <p>Une promotion vous envoie dans une usine plus grande, avec un problème d'un autre genre.</p>
+    </div>
+    <div class="plants">
+      <article class="plant sheet"><img src="media/usine1.jpg" alt="L'atelier : bureaux de réparation et vélos sur les supports" loading="lazy"><div><span class="num">Usine 1 · L'atelier</span><h3>Trouver le goulot</h3><p>L'enquête de base, la méthode et ses pièges.</p></div></article>
+      <article class="plant sheet"><img src="media/usine2.jpg" alt="L'usine régionale : la rangée de postes de soudure" loading="lazy"><div><span class="num">Usine 2 · Régionale</span><h3>Les équipes</h3><p>Absences au jour le jour, soudeurs habilités, remplaçants et tutorat. Puis un salon pour remplir le carnet de commandes.</p></div></article>
+      <article class="plant sheet"><img src="media/usine3.jpg" alt="L'usine nationale : le tunnel de contrôle de la peinture" loading="lazy"><div><span class="num">Usine 3 · Nationale</span><h3>La peinture</h3><p>Chaque changement de teinte arrête la ligne. Préparer pendant la série, un régleur, un standard construit avec l'équipe.</p></div></article>
+      <article class="plant sheet"><img src="media/usine4.jpg" alt="Le centre des batteries : le carrousel des vélos électriques" loading="lazy"><div><span class="num">Usine 4 · Batteries</span><h3>Audits et sécurité</h3><p>Le tableau de bord dit « conforme » ; l'atelier dit autre chose. Et le client vient auditer.</p></div></article>
+      <article class="plant sheet"><img src="media/usine5.jpg" alt="L'atelier de reconditionnement" loading="lazy"><div><span class="num">Usine 5 · Reconditionnement</span><h3>Des pièces sans étiquette</h3><p>Chercher, travailler par ressemblance, poser un référentiel.</p></div></article>
+      <article class="plant sheet"><img src="media/usine6.jpg" alt="Les Terrasses : rayonnages de vélos finis et chariot élévateur" loading="lazy"><div><span class="num">Usine 6 · Les Terrasses</span><h3>Le lissage</h3><p>Une demande en dents de scie : planning réactif ou lissé, supermarché de vélos, îlot sur mesure.</p></div></article>
+    </div>
+  </section>
+
+  <section aria-labelledby="moments-titre">
+    <div class="section-head">
+      <h2 id="moments-titre">Des grands moments, joués en personne</h2>
+      <p>Parfois il faut quitter le bureau. Vous y allez vous-même, tout à la souris, et ce que vous y faites change la suite.</p>
+    </div>
+    <div class="moments">
+      <div class="moment"><b>La manif</b><span>Le Groupe veut sous-traiter la peinture. Lundi, tout le monde est devant le portail.</span></div>
+      <div class="moment"><b>Le salon du cycle</b><span>Un stand, un créneau sur la grande scène, des acheteurs à convaincre.</span></div>
+      <div class="moment"><b>L'incendie</b><span>22 h, la cage à batteries. Alarme, rideaux coupe-feu, appel aux pompiers.</span></div>
+      <div class="moment"><b>La mairie</b><span>Quarante vélos pour les agents de la Ville, devant le conseil municipal.</span></div>
+      <div class="moment"><b>Le plateau télé</b><span>« Face à face », vingt-cinq minutes en direct, face à la déléguée du personnel.</span></div>
+      <div class="moment"><b>Le fournisseur</b><span>Ses cellules ont causé l'incendie. Il vous invite à visiter son usine.</span></div>
+      <div class="moment"><b>Le siège</b><span>Le conseil du Groupe vous convoque. Il peut fermer le site.</span></div>
+      <div class="moment"><b>Le dîner</b><span>Le patron du concurrent vous invite. « Entre gens du métier. »</span></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="copie-titre" class="copy sheet">
+    <div class="section-head" style="margin-bottom:0">
+      <span class="tag" style="justify-self:start">Version de test</span>
+      <h2 id="copie-titre">Recevoir une copie</h2>
+      <p>Le jeu est en test : chaque copie est personnelle et ne s'ouvre que sur l'ordinateur pour lequel sa clé a été faite.</p>
+    </div>
+    <ol class="copy-steps">
+      <li><p>Demandez le jeu à la personne qui vous a parlé de cette page : vous recevez un dossier pour Windows ou pour Mac.</p></li>
+      <li><p>Lancez-le. L'écran « Copie de test personnelle » affiche le code de votre ordinateur, par exemple<br><span class="code">ABCDE-FGH23</span></p></li>
+      <li><p>Cliquez sur « Copier le code » et envoyez-le-lui. Vous recevez en retour votre clé, une longue ligne qui commence par FD1.</p></li>
+      <li><p>Collez la clé dans le jeu, cliquez sur « Activer ». Le jeu s'ouvre, et la clé reste enregistrée.</p></li>
+    </ol>
+    <p class="fine">Une clé ne sert que sur son ordinateur : copier le dossier du jeu chez quelqu'un d'autre, ou lui passer votre clé, ne lui ouvre pas le jeu. Si vous changez d'ordinateur, demandez une nouvelle clé.</p>
+  </section>
+
+  <footer>
+    <span>Factory Director : Beyond the Bottleneck · version de test</span>
+    <span>Musique de la vidéo : « Scaling Up » de Ruskerdax (CC0)</span>
+    <span>Polices : Lilita One et Nunito (OFL)</span>
+  </footer>
+</main>
+</body>
+</html>
