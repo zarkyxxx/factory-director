@@ -175,6 +175,21 @@ a { color: inherit; }
 .copy-steps p { padding-top: 6px; }
 .copy-steps code { font: 700 15px/1 ui-monospace, Consolas, "Courier New", monospace; background: var(--paper-2); border: 1px solid var(--ink-2); border-radius: 5px; padding: 2px 6px; }
 .os { display: inline-block; font: 900 11px/1 var(--body); letter-spacing: .1em; text-transform: uppercase; background: var(--ink); color: var(--paper); border-radius: 4px; padding: 4px 6px 3px; margin: 6px 6px 0 0; }
+.install { display: grid; gap: 10px; min-width: 0; padding-top: 6px; }
+.install .os { margin-top: 0; }
+.install .alt { font-size: 15px; color: var(--ink-2); }
+kbd { font: 800 13px/1 var(--body); border: 1.5px solid var(--ink); border-bottom-width: 3px; border-radius: 5px; padding: 2px 6px; background: var(--paper); }
+.cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
+.cmd code {
+  flex: 1 1 auto; min-width: 0; overflow-x: auto; white-space: nowrap;
+  font: 700 14px/1.4 ui-monospace, Consolas, "Courier New", monospace;
+  background: var(--ink); color: var(--paper); border-radius: 9px; padding: 10px 12px;
+}
+.cmd button {
+  flex: none; font: 400 17px/1 var(--display); color: var(--ink); cursor: pointer;
+  background: var(--yellow); border: 2px solid var(--ink); border-bottom-width: 4px; border-radius: 9px; padding: 8px 14px;
+}
+.cmd button:active { border-bottom-width: 2px; transform: translateY(2px); }
 .downloads { display: flex; flex-wrap: wrap; gap: 14px; }
 .dl {
   display: grid; gap: 2px; min-width: 0; flex: 1 1 240px;
@@ -312,9 +327,12 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     </div>
     <p class="fine" id="dl-version">Toujours la dernière version de test.</p>
     <ol class="copy-steps">
-      <li><p>Décompressez le zip, puis lancez <b>FactoryDirector</b>.<br>
-        <span class="os">Windows</span> si « Windows a protégé votre ordinateur » s'affiche : « Informations complémentaires », puis « Exécuter quand même ».<br>
-        <span class="os">Mac</span> le jeu n'est pas signé par Apple : ouvrez le Terminal, tapez <code>xattr -cr</code> suivi d'un espace, glissez FactoryDirector dans la fenêtre et appuyez sur Entrée.</p></li>
+      <li><div class="install">
+        <p><span class="os">Windows</span> Décompressez le zip, puis lancez <b>FactoryDirector</b>. Si « Windows a protégé votre ordinateur » s'affiche : « Informations complémentaires », puis « Exécuter quand même ».</p>
+        <p><span class="os">Mac</span> Le jeu n'est pas signé par Apple, alors macOS le bloque à la première installation. Le plus simple : ouvrez le Terminal (touches <kbd>⌘</kbd> + <kbd>Espace</kbd>, tapez « Terminal », Entrée), collez cette ligne et appuyez sur Entrée. Elle télécharge le jeu, l'installe dans Applications et l'ouvre :</p>
+        <div class="cmd"><code id="mac-cmd">curl -fsSL https://zarkyxxx.github.io/factory-director/installer-mac.sh | sh</code><button type="button" id="copy-cmd">Copier</button></div>
+        <p class="alt">Sans Terminal : téléchargez le zip Mac, double-cliquez sur FactoryDirector et fermez le message. Ouvrez Réglages Système, puis Confidentialité et sécurité ; tout en bas, cliquez sur « Ouvrir quand même » et confirmez. À ne faire qu'une fois : les mises à jour, faites depuis le jeu, ne sont plus bloquées.</p>
+      </div></li>
       <li><p>L'écran « Copie de test personnelle » affiche le code de votre ordinateur, par exemple<br><span class="code">ABCDE-FGH23</span></p></li>
       <li><p>Cliquez sur « Copier le code » et envoyez-le à la personne qui vous a parlé du jeu. Vous recevez en retour votre clé, une longue ligne qui commence par FD1.</p></li>
       <li><p>Collez la clé dans le jeu, cliquez sur « Activer ». Le jeu s'ouvre, et la clé reste enregistrée.</p></li>
@@ -341,6 +359,15 @@ fetch('version.txt', { cache: 'no-store' }).then(function (r) { return r.ok ? r.
   if (+f[6]) document.querySelector('#dl-win small').textContent = 'Windows 10 ou 11 · zip · ' + mo(+f[6]);
   if (+f[9]) document.querySelector('#dl-mac small').textContent = 'macOS 12 ou plus récent · zip · ' + mo(+f[9]);
 }).catch(function () {});
+</script>
+<script>
+document.getElementById('copy-cmd').addEventListener('click', function () {
+  var b = this, code = document.getElementById('mac-cmd');
+  function selectIt() { var r = document.createRange(); r.selectNodeContents(code); var s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+  (navigator.clipboard ? navigator.clipboard.writeText(code.textContent) : Promise.reject()).then(function () {
+    b.textContent = 'Copié !'; setTimeout(function () { b.textContent = 'Copier'; }, 1800);
+  }, function () { selectIt(); b.textContent = '⌘ + C'; });
+});
 </script>
 </body>
 </html>
