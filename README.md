@@ -1,6 +1,6 @@
 # Factory Director : Beyond the Bottleneck — page de présentation
 
-Le site : https://zarkyxxx.github.io/factory-director/
+Le site : https://zarkyxxx.github.io/factory-director/ (français), https://zarkyxxx.github.io/factory-director/en/ (English), https://zarkyxxx.github.io/factory-director/de/ (Deutsch)
 
 Un jeu de gestion d'usine (vélos) en test. Cette page présente le jeu et explique comment recevoir une copie de test
 personnelle ; le jeu lui-même n'est pas ici.
