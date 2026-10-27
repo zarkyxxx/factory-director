@@ -178,6 +178,14 @@ a { color: inherit; }
 .install { display: grid; gap: 10px; min-width: 0; padding-top: 6px; }
 .install .os { margin-top: 0; }
 .install .alt { font-size: 15px; color: var(--ink-2); }
+.install-os { display: grid; gap: 10px; min-width: 0; }
+.install-os + .install-os { border-top: 2px dashed var(--ink-2); padding-top: 18px; margin-top: 8px; }
+#mac { scroll-margin-top: 48px; }
+#mac:target { animation: repere 2.6s ease-out; }
+@keyframes repere { from { background: #fff3c4; box-shadow: 0 0 0 12px #fff3c4; } to { background: transparent; box-shadow: 0 0 0 12px transparent; } }
+.install details summary { cursor: pointer; font-weight: 800; color: var(--ink); }
+.install details p { margin-top: 8px; }
+.install details a { color: var(--ink); font-weight: 800; }
 kbd { font: 800 13px/1 var(--body); border: 1.5px solid var(--ink); border-bottom-width: 3px; border-radius: 5px; padding: 2px 6px; background: var(--paper); }
 .cmd { display: flex; gap: 8px; align-items: stretch; min-width: 0; }
 .cmd code {
@@ -237,6 +245,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
 }
 @media (prefers-reduced-motion: reduce) {
   .brand, .tagline, .moment, .brand-words .tag { transform: none !important; }
+  #mac:target { animation: none; }
 }
 </style>
 </head>
@@ -336,11 +345,12 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     </div>
     <div class="downloads">
       <a class="dl" id="dl-win" href="https://github.com/zarkyxxx/factory-director/releases/latest/download/FactoryDirector-Windows.zip"><b>Télécharger pour Windows</b><small>Windows 10 ou 11 · zip</small></a>
-      <a class="dl" id="dl-mac" href="https://github.com/zarkyxxx/factory-director/releases/latest/download/FactoryDirector-Mac.zip"><b>Télécharger pour Mac</b><small>macOS 12 ou plus récent · zip</small></a>
+      <a class="dl" id="dl-mac" href="#mac"><b>Installer sur Mac</b><small>macOS 12 ou plus récent · une ligne à coller, ci-dessous</small></a>
     </div>
     <p class="fine" id="dl-version">Toujours la dernière version de test.</p>
     <ol class="copy-steps">
       <li><div class="install">
+        <div class="install-os" id="windows">
         <p><span class="os">Windows</span> <b>Installer et lancer</b></p>
         <ol class="sub">
           <li>Cliquez sur « Télécharger pour Windows », plus haut.</li>
@@ -358,9 +368,20 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
           <div class="folder-row"><span class="ico file"></span>UnityPlayer.dll<em>Extension de l'application</em></div>
         </div>
         <p class="alt">Si « Windows a protégé votre ordinateur » s'affiche : « Informations complémentaires », puis « Exécuter quand même ». Pour le retrouver facilement : clic droit sur FactoryDirector, « Envoyer vers », « Bureau (créer un raccourci) » (sous Windows 11, passez d'abord par « Afficher d'autres options »).</p>
-        <p><span class="os">Mac</span> <b>Installer et lancer</b> : le jeu n'est pas signé par Apple, alors macOS le bloque à la première installation. Le plus simple : ouvrez le Terminal (touches <kbd>⌘</kbd> + <kbd>Espace</kbd>, tapez « Terminal », Entrée), collez cette ligne et appuyez sur Entrée. Elle télécharge le jeu, l'installe dans Applications et l'ouvre :</p>
+        </div>
+        <div class="install-os" id="mac">
+        <p><span class="os">Mac</span> <b>Installer et lancer</b> : rien à télécharger avant, cette ligne fait tout.</p>
+        <ol class="sub">
+          <li>Ouvrez le Terminal : touches <kbd>⌘</kbd> + <kbd>Espace</kbd>, tapez « Terminal », puis Entrée.</li>
+          <li>Cliquez sur « Copier », collez la ligne dans le Terminal (<kbd>⌘</kbd> + <kbd>V</kbd>) et appuyez sur Entrée. Elle télécharge le jeu, l'installe dans Applications et l'ouvre.</li>
+        </ol>
         <div class="cmd"><code id="mac-cmd">curl -fsSL https://zarkyxxx.github.io/factory-director/installer-mac.sh | sh</code><button type="button" id="copy-cmd">Copier</button></div>
-        <p class="alt">Ensuite, lancez <b>FactoryDirector</b> depuis Applications ou le Launchpad.<br>Sans Terminal : téléchargez le zip Mac, double-cliquez dessus, glissez <b>FactoryDirector</b> dans Applications et ouvrez-le. Fermez le message de blocage, puis ouvrez Réglages Système, Confidentialité et sécurité ; tout en bas, cliquez sur « Ouvrir quand même » et confirmez. À ne faire qu'une fois : les mises à jour, faites depuis le jeu, ne sont plus bloquées.</p>
+        <p class="alt">Ensuite, lancez <b>FactoryDirector</b> depuis Applications ou le Launchpad. Pourquoi le Terminal : le jeu n'est pas signé par Apple, et macOS bloque un jeu non signé téléchargé par le navigateur ; installé par cette ligne, il s'ouvre directement.</p>
+        <details class="alt">
+          <summary>Sans Terminal (à la place de la ligne, pas en plus)</summary>
+          <p><a href="https://github.com/zarkyxxx/factory-director/releases/latest/download/FactoryDirector-Mac.zip">Téléchargez le zip Mac</a><span id="dl-mac-size"></span>. S'il ne s'est pas ouvert tout seul, double-cliquez dessus dans Téléchargements. Glissez <b>FactoryDirector</b> dans Applications et ouvrez-le. Fermez le message de blocage, puis ouvrez Réglages Système, Confidentialité et sécurité ; tout en bas, cliquez sur « Ouvrir quand même » et confirmez. À ne faire qu'une fois : les mises à jour, faites depuis le jeu, ne sont plus bloquées.</p>
+        </details>
+        </div>
       </div></li>
       <li><p>Au premier lancement, collez la clé reçue avec le lien du jeu, par exemple<br><span class="code">FD-7KQ2-MX9P-4TRW</span><br>puis cliquez sur « Activer ». Il faut être connecté à Internet cette fois-ci. Le jeu s'ouvre, et la clé reste enregistrée : ensuite, il marche hors ligne.</p></li>
       <li><p>Ensuite, le jeu se met à jour tout seul : quand une nouvelle version sort, le menu propose « Mettre à jour ». Pas besoin de retélécharger ni de réinstaller ; votre clé et vos parties sont gardées.</p></li>
@@ -384,7 +405,7 @@ fetch('version.txt', { cache: 'no-store' }).then(function (r) { return r.ok ? r.
   var mo = function (n) { return Math.round(n / 1048576) + ' Mo'; };
   document.getElementById('dl-version').textContent = 'Dernière version : ' + f[2] + ', du ' + f[3].split('-').reverse().join('/') + '.';
   if (+f[6]) document.querySelector('#dl-win small').textContent = 'Windows 10 ou 11 · zip · ' + mo(+f[6]);
-  if (+f[9]) document.querySelector('#dl-mac small').textContent = 'macOS 12 ou plus récent · zip · ' + mo(+f[9]);
+  if (+f[9]) document.getElementById('dl-mac-size').textContent = ' (' + mo(+f[9]) + ')';
 }).catch(function () {});
 </script>
 <script>

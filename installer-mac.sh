@@ -15,4 +15,5 @@ rm -rf "$DEST/FactoryDirector.app"
 mv "$TMP/jeu/FactoryDirector.app" "$DEST/"
 /usr/bin/xattr -cr "$DEST/FactoryDirector.app" 2>/dev/null || true
 echo "Factory Director est installé dans $DEST. Ouverture…"
+echo "Si vous aviez aussi téléchargé le zip Mac, vous pouvez le mettre à la corbeille : le jeu est dans Applications."
 open "$DEST/FactoryDirector.app"
