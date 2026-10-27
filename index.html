@@ -227,6 +227,29 @@ kbd { font: 800 13px/1 var(--body); border: 1.5px solid var(--ink); border-botto
   display: inline-block; margin-top: 6px;
 }
 .fine { font-size: 14.5px; color: var(--ink-2); max-width: 70ch; }
+.ask { display: grid; gap: 12px; padding: 18px clamp(14px, 3vw, 22px) 16px; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 14px; scroll-margin-top: 24px; }
+.ask h3 { margin: 0; font: 400 24px/1.1 var(--display); }
+.ask form { display: grid; gap: 12px; }
+.ask label { display: grid; gap: 5px; font-weight: 800; font-size: 15px; min-width: 0; }
+.ask textarea, .ask input {
+  font: 500 16px/1.4 var(--body); color: var(--ink); background: #fff; min-width: 0; width: 100%; box-sizing: border-box;
+  border: 2px solid var(--ink); border-radius: 9px; padding: 9px 11px;
+}
+.ask textarea { resize: vertical; min-height: 96px; }
+.ask textarea:focus, .ask input:focus { outline: 3px solid var(--yellow); outline-offset: 1px; }
+.ask-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.ask-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.ask-actions { display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; }
+.ask button {
+  font: 400 19px/1 var(--display); color: var(--ink); cursor: pointer;
+  background: var(--yellow); border: 2px solid var(--ink); border-bottom-width: 5px; border-radius: 10px; padding: 10px 16px;
+}
+.ask button:active { border-bottom-width: 2px; transform: translateY(3px); }
+.ask button:disabled { opacity: .6; cursor: default; }
+#ask-status { font-weight: 800; font-size: 15px; }
+#ask-status.err { color: var(--red); }
+.ask-thanks { display: grid; gap: 6px; }
+.ask-thanks b { font: 400 22px/1.1 var(--display); }
 
 footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--ink-2); font-weight: 700; }
 
@@ -341,7 +364,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     <div class="section-head" style="margin-bottom:0">
       <span class="tag" style="justify-self:start">Version de test</span>
       <h2 id="copie-titre">Télécharger et jouer</h2>
-      <p>Le jeu est en test : il s'ouvre avec la clé personnelle reçue avec le lien de cette page.</p>
+      <p>Le jeu est en test : il s'ouvre avec la clé personnelle reçue avec le lien de cette page. Pas encore de clé ? <a href="#demander">Demandez-en une</a>.</p>
     </div>
     <div class="downloads">
       <a class="dl" id="dl-win" href="https://github.com/zarkyxxx/factory-director/releases/latest/download/FactoryDirector-Windows.zip"><b>Télécharger pour Windows</b><small>Windows 10 ou 11 · zip</small></a>
@@ -387,6 +410,20 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
       <li><p>Ensuite, le jeu se met à jour tout seul : quand une nouvelle version sort, le menu propose « Mettre à jour ». Pas besoin de retélécharger ni de réinstaller ; votre clé et vos parties sont gardées.</p></li>
     </ol>
     <p class="fine">Une clé est personnelle : elle s'active sur deux ordinateurs au plus (un fixe et un portable, par exemple). Au-delà, elle est refusée ; si vous changez d'ordinateur, demandez à la personne qui vous l'a donnée de la libérer.</p>
+    <div class="ask" id="demander">
+      <h3>Pas encore de clé ?</h3>
+      <p>Les clés sont données une par une. Dites en quelques mots pourquoi vous aimeriez essayer le jeu : l'équipe vous répondra par e-mail.</p>
+      <form id="ask-form" novalidate>
+        <label>Pourquoi voulez-vous une clé ?<textarea name="message" rows="4" maxlength="2000" placeholder="Par exemple : j'aime les jeux de gestion, je travaille en usine, un ami m'en a parlé…"></textarea></label>
+        <div class="ask-row">
+          <label>Votre adresse e-mail (pour recevoir la clé)<input type="email" name="email" maxlength="120" autocomplete="email" inputmode="email"></label>
+          <label>Votre nom ou pseudo (facultatif)<input type="text" name="nom" maxlength="60" autocomplete="nickname"></label>
+        </div>
+        <label class="ask-trap" aria-hidden="true">Ne pas remplir<input type="text" name="site_web" tabindex="-1" autocomplete="off"></label>
+        <div class="ask-actions"><button type="submit">Envoyer la demande</button><span id="ask-status" role="status"></span></div>
+        <p class="fine">Votre adresse ne sert qu'à vous répondre.</p>
+      </form>
+    </div>
   </section>
 
   <footer>
@@ -415,6 +452,35 @@ document.getElementById('copy-cmd').addEventListener('click', function () {
   (navigator.clipboard ? navigator.clipboard.writeText(code.textContent) : Promise.reject()).then(function () {
     b.textContent = 'Copié !'; setTimeout(function () { b.textContent = 'Copier'; }, 1800);
   }, function () { selectIt(); b.textContent = '⌘ + C'; });
+});
+</script>
+<script>
+document.getElementById('ask-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var f = this, st = document.getElementById('ask-status'), b = f.querySelector('button');
+  var msg = f.message.value.trim(), mail = f.email.value.trim();
+  function say(t, err) { st.textContent = t; st.className = err ? 'err' : ''; }
+  if (!msg) { say('Dites d’abord pourquoi vous voulez une clé.', true); f.message.focus(); return; }
+  if (!/^[^\s@<>(),;:"'[\]]+@[^\s@<>(),;:"'[\]]+\.[a-zA-Z]{2,}$/.test(mail)) { say('Cette adresse e-mail ne semble pas complète (exemple : prenom@exemple.fr).', true); f.email.focus(); return; }
+  b.disabled = true; say('Envoi…', false);
+  fetch('activation.txt', { cache: 'no-store' }).then(function (r) { return r.ok ? r.text() : Promise.reject(); }).then(function (url) {
+    url = url.trim();
+    if (url.indexOf('https://') !== 0) return Promise.reject();
+    var body = new URLSearchParams({ action: 'demande', depuis: 'site', nom: f.nom.value.trim(), email: mail, message: msg, site_web: f.site_web.value });
+    return fetch(url, { method: 'POST', body: body });
+  }).then(function (r) { return r.json(); }).then(function (res) {
+    if (!res.ok) {
+      b.disabled = false;
+      say(res.err === 'limit' ? 'Plusieurs demandes ont déjà été envoyées : réessayez demain.'
+        : res.err === 'email' ? 'Cette adresse e-mail ne semble pas complète (exemple : prenom@exemple.fr).'
+        : 'La demande n’a pas pu être reçue. Réessayez dans un moment.', true);
+      return;
+    }
+    var ok = document.createElement('div'), t = document.createElement('b'), p = document.createElement('p');
+    ok.className = 'ask-thanks'; t.textContent = 'Demande envoyée !';
+    p.textContent = 'Vous recevrez une réponse à ' + mail + '. Quand la clé arrive, téléchargez le jeu plus haut et collez-la au premier lancement.';
+    ok.appendChild(t); ok.appendChild(p); f.replaceWith(ok);
+  }).catch(function () { b.disabled = false; say('Pas de connexion : vérifiez Internet, puis réessayez.', true); });
 });
 </script>
 </body>
