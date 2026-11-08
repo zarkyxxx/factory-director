@@ -149,7 +149,7 @@ section { scroll-margin-top: 20px; }
 .cycle i { font-style: normal; color: var(--orange); font-size: 18px; letter-spacing: 0; }
 .loop { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; counter-reset: step; }
 .loop > li { list-style: none; position: relative; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
-.loop img, .chain img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 13px 13px 0 0; border-bottom: 3px solid var(--ink); }
+.loop img, .loop video, .chain img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 13px 13px 0 0; border-bottom: 3px solid var(--ink); }
 .loop .txt { padding: 14px 16px 18px; display: grid; gap: 7px; align-content: start; }
 .loop h3 { display: flex; align-items: center; gap: 10px; font-size: 22px; }
 .loop h3::before {
@@ -273,6 +273,11 @@ section { scroll-margin-top: 20px; }
 .rail li { list-style: none; display: flex; align-items: center; gap: 6px; font: 800 14px/1 var(--body); }
 .rail li:not(:last-child)::after { content: "→"; color: var(--orange); font-weight: 900; margin-left: 2px; }
 .rail b { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--paper); font: 400 15px/1 var(--display); }
+.reel { max-width: 900px; margin: 0 auto 26px; padding: 10px; display: grid; gap: 8px; }
+.reel video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 9px; background: var(--ink); }
+.reel figcaption { padding: 0 6px 2px; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+.board .reel { transform: rotate(-.4deg); }
+video.clip { background: var(--ink); }
 .plants { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .plant { overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
 .plant img { width: 100%; max-width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-bottom: 3px solid var(--ink); }
@@ -433,7 +438,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
   .guide > summary small { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .brand, .shot, .brand-words .tag { transform: none !important; }
+  .brand, .shot, .brand-words .tag, .board .reel { transform: none !important; }
   #mac:target { animation: none; }
 }
 </style>
@@ -478,7 +483,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     </div>
     <ol class="loop">
       <li class="sheet">
-        <img src="../media/boucle-observer-de.jpg" width="800" height="533" loading="lazy" alt="Nach einem Rundgang vor Ort: die Karte „Was Sie gelernt haben“, als beobachtete Tatsache markiert">
+        <video class="clip" muted loop playsinline preload="none" poster="../media/clip-terrain-de.jpg" src="../media/clip-terrain-de.mp4" aria-label="Die Werksleitung geht vor Ort und öffnet dann die Karte der Station und die einer Person"></video>
         <div class="txt"><h3>Beobachten</h3><p>Rundgang vor Ort (Gemba), Gespräche, Zeitaufnahmen. Was Sie mit eigenen Augen sehen, wird zur Tatsache; ein Gerücht bleibt ein Gerücht – und ist manchmal eine falsche Fährte.</p></div>
       </li>
       <li class="sheet">
@@ -490,7 +495,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
         <div class="txt"><h3>Entscheiden</h3><p>Schulen, einstellen, jemanden versetzen, Überstunden, Wartung, im Takt des Engpasses freigeben. Jeder Hebel kostet Zeitfenster, Geld oder Zeit – und manche wirken erst in der Woche darauf.</p></div>
       </li>
       <li class="sheet">
-        <img src="../media/boucle-reagir-de.jpg" width="800" height="533" loading="lazy" alt="Die Wochenbilanz: Die Prüfung war tatsächlich der Engpass, und der Engpass ist weitergewandert">
+        <video class="clip" muted loop playsinline preload="none" poster="../media/clip-flux.jpg" src="../media/clip-flux.mp4" aria-label="Das Werk in Bewegung: Die Räder wandern Station für Station, über die Montagelinie und durch die Lackiererei"></video>
         <div class="txt"><h3>Das Werk reagieren sehen</h3><p>Die Räder wandern Station für Station, Stunde für Stunde. Die Bilanz zeigt, ob Sie richtig lagen, was Ihre Entscheidungen in Zahlen verändert haben und wohin der Engpass gewandert ist.</p></div>
       </li>
     </ol>
@@ -538,6 +543,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
       <h2 id="moments-titre">Ein Werk zu leiten endet nicht am Dashboard</h2>
       <p>Manchmal muss man das Büro verlassen. Diese Momente werden persönlich gespielt, alles mit der Maus: Man redet, verhandelt, verspricht – und was dort geschieht, kommt später zurück.</p>
     </div>
+    <figure class="reel sheet"><video class="clip" muted loop playsinline preload="none" poster="../media/clip-moments-de.jpg" src="../media/clip-moments-de.mp4" aria-label="Sechs große Momente in Bewegung: das Fernsehstudio, der Brand, die Messe, die Kundgebung, das Abendessen, das Rathaus"></video><figcaption>In Bewegung: Fernsehstudio, Brand, Messe, Kundgebung, Abendessen, Rathaus.</figcaption></figure>
     <div class="shots">
       <figure class="shot"><img src="../media/moment-mairie.jpg" width="800" height="600" loading="lazy" alt="Das Rathaus: die Werksleitung am Rednerpult vor dem Stadtrat"><figcaption><span class="where">Werk 1</span><b>Das Rathaus</b><span>Vierzig Fahrräder für die Beschäftigten der Stadt, zu verteidigen vor dem Stadtrat.</span></figcaption></figure>
       <figure class="shot"><img src="../media/moment-salon.jpg" width="800" height="600" loading="lazy" alt="Die Fahrradmesse: die Werksleitung auf der großen Bühne vor dem Publikum"><figcaption><span class="where">Werk 2</span><b>Die Fahrradmesse</b><span>Ein Stand, Einkäufer, die um jeden Euro feilschen, ein Auftritt auf der großen Bühne.</span></figcaption></figure>
@@ -597,6 +603,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     <ol class="rail" aria-label="Die sechs Werke der Reihe nach">
       <li><b>1</b>Die Werkstatt</li><li><b>2</b>Regionalwerk</li><li><b>3</b>Nationales Werk</li><li><b>4</b>Vorzeigezentrum</li><li><b>5</b>Aufbereitung</li><li><b>6</b>Die Terrassen</li>
     </ol>
+    <figure class="reel sheet"><video class="clip" muted loop playsinline preload="none" poster="../media/clip-usines.jpg" src="../media/clip-usines.mp4" aria-label="Die sechs Werke nacheinander, von der Werkstatt bis zu den Terrassen"></video><figcaption>Die sechs Werke, von der Werkstatt bis zu den Terrassen.</figcaption></figure>
     <div class="plants">
       <article class="plant sheet"><img src="../media/usine1.jpg" width="960" height="540" alt="Die Werkstatt: Reparaturtische und Räder in Montageständern" loading="lazy"><div><span class="num">Werk 1 · Die Werkstatt</span><h3>Finden, was wirklich bremst</h3><p>Eine kleine Werkstatt, die zu spät liefert. Bei Ihrer Ankunft wartet schon ein Gerücht: ihm folgen oder nachprüfen?</p></div></article>
       <article class="plant sheet"><img src="../media/usine2.jpg" width="960" height="540" alt="Das Regionalwerk: die Reihe der Schweißplätze" loading="lazy"><div><span class="num">Werk 2 · Regionalwerk</span><h3>Mit den Leuten auskommen, die man hat</h3><p>Eine Montagelinie, Abwesenheiten von Tag zu Tag, zertifizierte Schweißfachkräfte. Vertretungen und Einarbeitung, dann die Fahrradmesse, um das Auftragsbuch zu füllen.</p></div></article>
@@ -705,6 +712,16 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
   });
   function ouvrirDepuisAdresse() { var t = cible(location.hash); if (t && !guide.open) { guide.open = true; t.scrollIntoView(); } }
   ouvrirDepuisAdresse();
+  // les clips du jeu : ils jouent seuls (sans son) quand ils sont à l'écran, et se mettent en pause sinon ;
+  // avec « moins d'animations », ils restent sur leur image et se lancent à la demande
+  var clips = document.querySelectorAll('video.clip');
+  var calmeClips = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function jouer(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  if (calmeClips) clips.forEach(function (v) { v.controls = true; });
+  else if ('IntersectionObserver' in window) {
+    var vu = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) jouer(e.target); else e.target.pause(); }); }, { threshold: 0.35 });
+    clips.forEach(function (v) { vu.observe(v); });
+  } else clips.forEach(jouer);
   window.addEventListener('hashchange', ouvrirDepuisAdresse);
 })();
 </script>

@@ -149,7 +149,7 @@ section { scroll-margin-top: 20px; }
 .cycle i { font-style: normal; color: var(--orange); font-size: 18px; letter-spacing: 0; }
 .loop { margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; counter-reset: step; }
 .loop > li { list-style: none; position: relative; display: grid; grid-template-rows: auto 1fr; min-width: 0; }
-.loop img, .chain img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 13px 13px 0 0; border-bottom: 3px solid var(--ink); }
+.loop img, .loop video, .chain img { display: block; width: 100%; height: auto; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 13px 13px 0 0; border-bottom: 3px solid var(--ink); }
 .loop .txt { padding: 14px 16px 18px; display: grid; gap: 7px; align-content: start; }
 .loop h3 { display: flex; align-items: center; gap: 10px; font-size: 22px; }
 .loop h3::before {
@@ -273,6 +273,11 @@ section { scroll-margin-top: 20px; }
 .rail li { list-style: none; display: flex; align-items: center; gap: 6px; font: 800 14px/1 var(--body); }
 .rail li:not(:last-child)::after { content: "→"; color: var(--orange); font-weight: 900; margin-left: 2px; }
 .rail b { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: var(--paper); font: 400 15px/1 var(--display); }
+.reel { max-width: 900px; margin: 0 auto 26px; padding: 10px; display: grid; gap: 8px; }
+.reel video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 9px; background: var(--ink); }
+.reel figcaption { padding: 0 6px 2px; font-size: 14px; font-weight: 700; color: var(--ink-2); }
+.board .reel { transform: rotate(-.4deg); }
+video.clip { background: var(--ink); }
 .plants { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .plant { overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
 .plant img { width: 100%; max-width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; display: block; border-bottom: 3px solid var(--ink); }
@@ -433,7 +438,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
   .guide > summary small { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .brand, .shot, .brand-words .tag { transform: none !important; }
+  .brand, .shot, .brand-words .tag, .board .reel { transform: none !important; }
   #mac:target { animation: none; }
 }
 </style>
@@ -478,7 +483,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     </div>
     <ol class="loop">
       <li class="sheet">
-        <img src="../media/boucle-observer-en.jpg" width="800" height="533" loading="lazy" alt="After a walk on the shop floor: the “What you learned” card, marked “observed fact”">
+        <video class="clip" muted loop playsinline preload="none" poster="../media/clip-terrain-en.jpg" src="../media/clip-terrain-en.mp4" aria-label="The director goes to see on site, then opens the station card and a team member's card"></video>
         <div class="txt"><h3>Observe</h3><p>Walk the shop floor (gemba), talk to people, time the work. What you see with your own eyes becomes a fact; a rumour stays a rumour, and sometimes it is a false lead.</p></div>
       </li>
       <li class="sheet">
@@ -490,7 +495,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
         <div class="txt"><h3>Decide</h3><p>Train, hire, move someone, overtime, maintenance, release work at the bottleneck's pace. Every lever costs time slots, money or time, and some only take effect the following week.</p></div>
       </li>
       <li class="sheet">
-        <img src="../media/boucle-reagir-en.jpg" width="800" height="533" loading="lazy" alt="The weekly review: inspection really was the bottleneck, and the bottleneck has moved">
+        <video class="clip" muted loop playsinline preload="none" poster="../media/clip-flux.jpg" src="../media/clip-flux.mp4" aria-label="The factory at work: bikes move station by station, along the assembly line and through the paint shop"></video>
         <div class="txt"><h3>Watch the factory react</h3><p>Bikes move station by station, hour by hour. The review tells you whether you were right, what your choices changed in numbers, and where the bottleneck went.</p></div>
       </li>
     </ol>
@@ -538,6 +543,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
       <h2 id="moments-titre">Running a factory doesn't stop at the dashboard</h2>
       <p>Sometimes you have to leave the office. These moments are played in person, all with the mouse: you talk, you negotiate, you promise, and what happens there comes back later.</p>
     </div>
+    <figure class="reel sheet"><video class="clip" muted loop playsinline preload="none" poster="../media/clip-moments-en.jpg" src="../media/clip-moments-en.mp4" aria-label="Six big moments in motion: the TV studio, the fire, the bike show, the protest, the dinner, the town hall"></video><figcaption>In motion: the TV studio, the fire, the bike show, the protest, the dinner, the town hall.</figcaption></figure>
     <div class="shots">
       <figure class="shot"><img src="../media/moment-mairie.jpg" width="800" height="600" loading="lazy" alt="The town hall: the director at the lectern, facing the town council"><figcaption><span class="where">Factory 1</span><b>The town hall</b><span>Forty bikes for the town's staff, to be defended before the town council.</span></figcaption></figure>
       <figure class="shot"><img src="../media/moment-salon.jpg" width="800" height="600" loading="lazy" alt="The bike show: the director on the main stage, in front of the audience"><figcaption><span class="where">Factory 2</span><b>The bike show</b><span>A stand, buyers who haggle over every euro, a turn on the main stage.</span></figcaption></figure>
@@ -597,6 +603,7 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
     <ol class="rail" aria-label="The six factories in order">
       <li><b>1</b>The workshop</li><li><b>2</b>Regional</li><li><b>3</b>National</li><li><b>4</b>Lead centre</li><li><b>5</b>Refurbishment</li><li><b>6</b>The Terraces</li>
     </ol>
+    <figure class="reel sheet"><video class="clip" muted loop playsinline preload="none" poster="../media/clip-usines.jpg" src="../media/clip-usines.mp4" aria-label="The six factories one after another, from the workshop to the Terraces"></video><figcaption>The six factories, from the workshop to the Terraces.</figcaption></figure>
     <div class="plants">
       <article class="plant sheet"><img src="../media/usine1.jpg" width="960" height="540" alt="The workshop: repair benches and bikes on stands" loading="lazy"><div><span class="num">Factory 1 · The workshop</span><h3>Find what really holds things up</h3><p>A small workshop that delivers late. A rumour is waiting for you on arrival: follow it, or go and check?</p></div></article>
       <article class="plant sheet"><img src="../media/usine2.jpg" width="960" height="540" alt="The regional factory: the row of welding stations" loading="lazy"><div><span class="num">Factory 2 · Regional</span><h3>Make it work with the people you have</h3><p>An assembly line, day-to-day absences, certified welders. Stand-ins and mentoring, then the bike show to fill the order book.</p></div></article>
@@ -705,6 +712,16 @@ footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: 
   });
   function ouvrirDepuisAdresse() { var t = cible(location.hash); if (t && !guide.open) { guide.open = true; t.scrollIntoView(); } }
   ouvrirDepuisAdresse();
+  // les clips du jeu : ils jouent seuls (sans son) quand ils sont à l'écran, et se mettent en pause sinon ;
+  // avec « moins d'animations », ils restent sur leur image et se lancent à la demande
+  var clips = document.querySelectorAll('video.clip');
+  var calmeClips = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function jouer(v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  if (calmeClips) clips.forEach(function (v) { v.controls = true; });
+  else if ('IntersectionObserver' in window) {
+    var vu = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) jouer(e.target); else e.target.pause(); }); }, { threshold: 0.35 });
+    clips.forEach(function (v) { vu.observe(v); });
+  } else clips.forEach(jouer);
   window.addEventListener('hashchange', ouvrirDepuisAdresse);
 })();
 </script>
