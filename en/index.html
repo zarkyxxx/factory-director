@@ -384,6 +384,7 @@ kbd { font: 800 13px/1 var(--body); border: 1.5px solid var(--ink); border-botto
 #ask-status { font-weight: 800; font-size: 15px; }
 #ask-status.err { color: var(--red); }
 .ask-thanks { display: grid; gap: 6px; }
+.ask-spam { margin: 0; padding: 8px 12px; border-left: 4px solid #e0a020; background: rgba(224,160,32,.14); font-weight: 600; }
 .ask-thanks b { font: 400 22px/1.1 var(--display); }
 
 footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--ink-2); font-weight: 700; }
@@ -772,7 +773,8 @@ document.getElementById('ask-form').addEventListener('submit', function (e) {
     var ok = document.createElement('div'), t = document.createElement('b'), p = document.createElement('p');
     ok.className = 'ask-thanks'; t.textContent = "Request sent!";
     p.textContent = "You will get an answer at {mail}. When the key arrives, download the game above and paste it on first launch.".replace('{mail}', mail);
-    ok.appendChild(t); ok.appendChild(p); f.replaceWith(ok);
+    var w = document.createElement('p'); w.className = 'ask-spam'; w.textContent = "Please check your spam (junk) folder: our reply often lands there. It comes from factorydirectorgame@gmail.com.";
+    ok.appendChild(t); ok.appendChild(p); ok.appendChild(w); f.replaceWith(ok);
   }).catch(function () { b.disabled = false; say("No connection: check the Internet, then try again.", true); });
 });
 </script>

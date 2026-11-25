@@ -384,6 +384,7 @@ kbd { font: 800 13px/1 var(--body); border: 1.5px solid var(--ink); border-botto
 #ask-status { font-weight: 800; font-size: 15px; }
 #ask-status.err { color: var(--red); }
 .ask-thanks { display: grid; gap: 6px; }
+.ask-spam { margin: 0; padding: 8px 12px; border-left: 4px solid #e0a020; background: rgba(224,160,32,.14); font-weight: 600; }
 .ask-thanks b { font: 400 22px/1.1 var(--display); }
 
 footer { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; color: var(--ink-2); font-weight: 700; }
@@ -772,7 +773,8 @@ document.getElementById('ask-form').addEventListener('submit', function (e) {
     var ok = document.createElement('div'), t = document.createElement('b'), p = document.createElement('p');
     ok.className = 'ask-thanks'; t.textContent = "Demande envoyée !";
     p.textContent = "Vous recevrez une réponse à {mail}. Quand la clé arrive, téléchargez le jeu plus haut et collez-la au premier lancement.".replace('{mail}', mail);
-    ok.appendChild(t); ok.appendChild(p); f.replaceWith(ok);
+    var w = document.createElement('p'); w.className = 'ask-spam'; w.textContent = "Pensez à vérifier vos courriers indésirables (spam) : notre réponse y arrive souvent. Elle vient de factorydirectorgame@gmail.com.";
+    ok.appendChild(t); ok.appendChild(p); ok.appendChild(w); f.replaceWith(ok);
   }).catch(function () { b.disabled = false; say("Pas de connexion : vérifiez Internet, puis réessayez.", true); });
 });
 </script>
